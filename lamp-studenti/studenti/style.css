@@ -1,0 +1,208 @@
+nav {
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1.4rem;
+    gap: 1.5rem;
+} 
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+.logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.05rem 0;
+    cursor: pointer; /* still a link but not styled like one */
+}
+/* Text-only logo variant - compact, elegant */
+.logo-text-only .logo-text {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffd24d;
+    letter-spacing: 0.3px;
+    line-height: 1;
+    margin: 0;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, rgba(255,210,77,0.04), rgba(0,0,0,0));
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.05);
+    display: inline-block;
+}
+.logo-text-only .logo-text .logo-highlight {
+    background: linear-gradient(90deg,#4CAF50 0%, #45a049 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 900;
+}
+/* Keep hover subtle */
+.logo:hover { opacity: 0.98; transform: translateY(-1px); }
+.logo, .logo * { transition: transform 0.12s ease, opacity 0.12s ease; }
+.logo:focus { outline: 2px solid rgba(255,210,77,0.08); outline-offset: 3px; }
+.menu {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    align-items: center;
+}
+.menu-left {
+    gap: 30px;
+}
+.menu li { display: flex; align-items: center; }
+/* Explicit link rules to avoid browser defaults (blue underline) */
+.menu a, .menu a:link, .menu a:visited, .menu a:active {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+.menu a:hover, .menu a:focus {
+    color: #ffd24d;
+    text-decoration: none;
+    background: rgba(255,210,77,0.03);
+}
+.menu a:focus {
+    outline: 2px solid rgba(255,210,77,0.12);
+    outline-offset: 3px;
+}
+/* Logo should never look like a typical blue link */
+.logo, .logo:link, .logo:visited, .logo:active {
+    text-decoration: none;
+    color: inherit;
+}
+.logo-text, .logo-text * {
+    text-decoration: none;
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
+}
+.menu-right {
+    margin-left: auto;
+}
+.user-profile {
+    position: relative;
+}
+.profile-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+.profile-link:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid white;
+    object-fit: cover;
+}
+.username {
+    font-weight: 600;
+}
+/* Stiluri Formular Login/Register */
+.form-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Important pentru padding */
+}
+.alert {
+    padding: 10px;
+    background-color: #f44336;
+    color: white;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    text-align: center;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 300px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card h2 {
+    color: #333;
+    margin: 10px 0 5px 0;
+}
+
+.detalii {
+    color: #777;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.descriere {
+    padding: 0 15px;
+    color: #555;
+}
+
+button {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #e68900;
+}

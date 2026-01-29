@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0" stop-color="#ffd24d" />
+      <stop offset="1" stop-color="#ff9f1a" />
+    </linearGradient>
+  </defs>
+  <!-- Paw mark -->
+  <g transform="translate(10,6)">
+    <ellipse cx="22" cy="30" rx="18" ry="12" fill="url(#g)" stroke="#e6a800" stroke-width="1" />
+    <circle cx="6" cy="12" r="6" fill="#ffd24d" stroke="#e6a800" stroke-width="1" />
+    <circle cx="16" cy="6" r="5" fill="#ffd24d" stroke="#e6a800" stroke-width="1" />
+    <circle cx="32" cy="6" r="5" fill="#ffd24d" stroke="#e6a800" stroke-width="1" />
+    <circle cx="42" cy="12" r="6" fill="#ffd24d" stroke="#e6a800" stroke-width="1" />
+  </g>
+  <!-- Text -->
+  <text x="80" y="38" font-family="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" font-size="20" fill="#333" font-weight="700">labuta fericita</text>
+</svg>
