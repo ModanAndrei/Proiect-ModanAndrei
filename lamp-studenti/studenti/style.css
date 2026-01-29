@@ -19,9 +19,9 @@ nav {
     text-decoration: none;
     color: inherit;
     padding: 0.05rem 0;
-    cursor: pointer; /* still a link but not styled like one */
+    cursor: pointer;
 }
-/* Text-only logo variant - compact, elegant */
+
 .logo-text-only .logo-text {
     font-size: 1rem;
     font-weight: 800;
@@ -42,7 +42,6 @@ nav {
     color: transparent;
     font-weight: 900;
 }
-/* Keep hover subtle */
 .logo:hover { opacity: 0.98; transform: translateY(-1px); }
 .logo, .logo * { transition: transform 0.12s ease, opacity 0.12s ease; }
 .logo:focus { outline: 2px solid rgba(255,210,77,0.08); outline-offset: 3px; }
@@ -57,7 +56,6 @@ nav {
     gap: 30px;
 }
 .menu li { display: flex; align-items: center; }
-/* Explicit link rules to avoid browser defaults (blue underline) */
 .menu a, .menu a:link, .menu a:visited, .menu a:active {
     color: white;
     text-decoration: none;
@@ -75,7 +73,6 @@ nav {
     outline: 2px solid rgba(255,210,77,0.12);
     outline-offset: 3px;
 }
-/* Logo should never look like a typical blue link */
 .logo, .logo:link, .logo:visited, .logo:active {
     text-decoration: none;
     color: inherit;
@@ -112,7 +109,6 @@ nav {
 .username {
     font-weight: 600;
 }
-/* Stiluri Formular Login/Register */
 .form-container {
     max-width: 400px;
     margin: 50px auto;
@@ -127,7 +123,7 @@ input, select, textarea {
     margin: 10px 0;
     border: 1px solid #ddd;
     border-radius: 4px;
-    box-sizing: border-box; /* Important pentru padding */
+    box-sizing: border-box;
 }
 .alert {
     padding: 10px;

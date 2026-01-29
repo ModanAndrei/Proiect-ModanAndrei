@@ -207,7 +207,6 @@ require 'db.php';
 <body>
     <?php include 'navbar.php'; ?>
 
-    <!-- CAINI FEATURED - TOP -->
     <div class="featured-dogs" style="margin-top: 20px; margin-bottom: 40px;">
         <h2>🐕 Caini Disponibili pentru Adoptie</h2>
         <div class="carousel-container">
@@ -253,7 +252,6 @@ require 'db.php';
         </div>
     </div>
 
-    <!-- HERO SECTION -->
         <h1>🐾 Labuta Fericita</h1>
         <p>Gaseste-ti prietenul perfect si salveaza o viata</p>
     </div>
@@ -352,7 +350,7 @@ require 'db.php';
     </div>
 
     <div class="cta-section">
-        <h2>Vrei sa Adoptezi?</h2>
+        <h2>Vrei sa Adopti?</h2>
         <p>Vedeti toti cainii noștri disponibili și gasiti-va noul prieten cel mai bun!</p>
         <a href="adopta.php">Exploreaza Caini</a>
         <span style="margin: 0 15px;">|</span>
@@ -360,7 +358,6 @@ require 'db.php';
     </div>
 
     <script>
-        // Simple infinite carousel - per-carousel initialization to avoid duplicated IDs causing incorrect counts
         document.querySelectorAll('.carousel-container').forEach(container => {
             const carousel = container.querySelector('.dogs-carousel');
             if (!carousel) return;
@@ -411,7 +408,6 @@ require 'db.php';
             autoPlay();
         });
 
-        // Standard adoptCaine function
         function adoptCaine(caineId) {
             <?php if (isset($_SESSION['user_id'])): ?>
                 window.location.href = 'adopt_form.php?caine_id=' + caineId;

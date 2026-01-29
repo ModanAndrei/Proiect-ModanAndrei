@@ -2,7 +2,6 @@
 session_start();
 require 'db.php';
 
-// Permisiuni - doar admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header('Location: index.php');
     exit;
@@ -11,7 +10,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 $feedback = '';
 $error = '';
 
-// Procesare POST (delete / set_status)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     try {
@@ -19,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!isset($_POST['dog_id']) || !is_numeric($_POST['dog_id'])) throw new Exception('ID invalid.');
             $dog_id = (int)$_POST['dog_id'];
 
-            // Optional: fetch image path to unlink if stored on disk (left as exercise)
             $stmt = $pdo->prepare("DELETE FROM caini WHERE id = ?");
             $stmt->execute([$dog_id]);
             $feedback = 'Anunțul a fost șters.';
@@ -42,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Preluam lista de caini
 $stmt = $pdo->query("SELECT * FROM caini ORDER BY id DESC");
 $caini = $stmt->fetchAll();
 ?>

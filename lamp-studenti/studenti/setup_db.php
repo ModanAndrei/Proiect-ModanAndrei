@@ -1,5 +1,4 @@
 <?php
-// setup_db.php
 $host = 'mysql'; 
 $db   = 'studenti';
 $user = 'user';
@@ -17,7 +16,6 @@ try {
     $pdo = new PDO($dsn, $user, $pass, $options);
     echo "Conexiune reușită!<br>";
 
-    // 1. Tabel UTILIZATORI (cu roluri si ban)
     $sql_users = "CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(50) NOT NULL UNIQUE,
@@ -32,7 +30,6 @@ try {
     $pdo->exec($sql_users);
     echo "Tabel 'users' creat.<br>";
 
-    // 2. Tabel CAINI
     $sql_dogs = "CREATE TABLE IF NOT EXISTS caini (
         id INT AUTO_INCREMENT PRIMARY KEY,
         nume VARCHAR(50) NOT NULL,
@@ -45,7 +42,6 @@ try {
     $pdo->exec($sql_dogs);
     echo "Tabel 'caini' creat.<br>";
 
-    // 3. Tabel CERERI ADOPTIE
     $sql_requests = "CREATE TABLE IF NOT EXISTS cereri (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT,
@@ -62,8 +58,6 @@ try {
     $pdo->exec($sql_requests);
     echo "Tabel 'cereri' creat.<br>";
 
-    // 4. Inserare ADMIN default (daca nu exista)
-    // User: admin, Parola: admin123
     $stmt = $pdo->prepare("SELECT count(*) FROM users WHERE username = ?");
     $stmt->execute(['admin']);
     if ($stmt->fetchColumn() == 0) {
@@ -73,7 +67,7 @@ try {
         echo "Cont ADMIN creat (User: admin / Pass: admin123)<br>";
     }
 
-    // 5. Inserare cativa caini de test
+
     $stmt = $pdo->query("SELECT count(*) FROM caini");
     if ($stmt->fetchColumn() == 0) {
         $pdo->exec("INSERT INTO caini (nume, rasa, varsta, descriere, imagine) VALUES 

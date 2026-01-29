@@ -2,7 +2,6 @@
 session_start();
 require 'db.php';
 
-// Redirecționează dacă nu e logat
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -11,7 +10,6 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $section = $_GET['section'] ?? $_POST['section'] ?? 'about';
 
-// Preluează datele utilizatorului
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
@@ -20,19 +18,16 @@ if (!$user) {
     die('Utilizator nu gasit.');
 }
 
-// Daca secțiunea e 'requests' aducem cererile trimise de utilizator
-$userRequests = [];
+$userRequests = []; 
 if ($section === 'requests') {
     $stmt = $pdo->prepare("SELECT cereri.*, caini.nume AS caine_nume, caini.rasa AS caine_rasa FROM cereri LEFT JOIN caini ON cereri.caine_id = caini.id WHERE cereri.user_id = ? ORDER BY cereri.id DESC");
     $stmt->execute([$user_id]);
     $userRequests = $stmt->fetchAll();
 }
 
-// Procesează formulare
 $message = '';
 $error = '';
 
-// Mesaje din redirect-uri (GET)
 if (isset($_GET['success']) && $_GET['success'] === 'edited') {
     $message = 'Cererea a fost actualizată cu succes.';
 }
@@ -41,7 +36,6 @@ if (isset($_GET['error']) && $_GET['error'] === 'cannot_edit') {
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($section === 'about') {
-        // Update About Me
         $about = $_POST['about'] ?? '';
         $stmt = $pdo->prepare("UPDATE users SET about = ? WHERE id = ?");
         if ($stmt->execute([$about, $user_id])) {
@@ -49,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user['about'] = $about;
         }
     } elseif ($section === 'security') {
-        // Change Email
         if (isset($_POST['action']) && $_POST['action'] === 'email') {
             $new_email = $_POST['new_email'] ?? '';
             if (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
@@ -69,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
-        // Change Password
         if (isset($_POST['action']) && $_POST['action'] === 'password') {
             $old_password = $_POST['old_password'] ?? '';
             $new_password = $_POST['new_password'] ?? '';
@@ -90,7 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     } elseif ($section === 'profile-picture') {
-        // Upload Profile Picture
         if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
             $file = $_FILES['profile_image'];
             $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -104,7 +95,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $filepath = 'assets/' . $filename;
                 
                 if (move_uploaded_file($file['tmp_name'], $filepath)) {
-                    // Sterge poza veche
                     if ($user['profile_image'] && file_exists($user['profile_image'])) {
                         unlink($user['profile_image']);
                     }
@@ -121,7 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     } elseif ($section === 'requests') {
-        // Anulează o cerere trimisă (doar cele în așteptare)
         if (isset($_POST['action']) && $_POST['action'] === 'cancel' && isset($_POST['request_id']) && is_numeric($_POST['request_id'])) {
             $req_id = (int)$_POST['request_id'];
             $stmt = $pdo->prepare("SELECT * FROM cereri WHERE id = ? AND user_id = ?");
@@ -361,7 +350,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="error"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
-            <!-- DESPRE MINE -->
             <div class="form-section <?= $section === 'about' ? 'active' : '' ?>">
                 <h2>Despre Mine</h2>
                 <form method="POST">
@@ -373,7 +361,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
             </div>
 
-            <!-- SECURITATE -->
             <div class="form-section <?= $section === 'security' ? 'active' : '' ?>">
                 <h2>Securitate</h2>
                 
@@ -414,7 +401,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
             </div>
 
-            <!-- POZA DE PROFIL -->
             <div class="form-section <?= $section === 'profile-picture' ? 'active' : '' ?>">
                 <h2>Poza de Profil</h2>
                 <form method="POST" enctype="multipart/form-data">
@@ -430,7 +416,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
             </div>
 
-            <!-- CERERI TRIMISE -->
             <div class="form-section <?= $section === 'requests' ? 'active' : '' ?>">
                 <h2>Cereri Trimise</h2>
                 <?php if (empty($userRequests)): ?>

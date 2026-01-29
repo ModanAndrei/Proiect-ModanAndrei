@@ -1,5 +1,4 @@
 <?php
-// migrate.php - Adauga coloanele noi la users table
 $host = 'mysql';
 $db   = 'studenti';
 $user = 'user';
@@ -11,7 +10,6 @@ try {
 
     echo "Inceput migrare...<br>";
 
-    // Check if profile_image column exists
     $stmt = $pdo->query("DESCRIBE users");
     $columns = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 

@@ -1,7 +1,6 @@
 <?php
 require 'db.php';
 
-// Dezactiveaza foreign key checks pentru a putea truncate
 $pdo->exec("SET FOREIGN_KEY_CHECKS=0");
 $pdo->exec("TRUNCATE TABLE caini");
 $pdo->exec("SET FOREIGN_KEY_CHECKS=1");
@@ -39,25 +38,20 @@ foreach ($lista_imagini as $index => $img_url) {
     $parti_link = explode('/', $img_url);
     $rasa_raw = $parti_link[4];
     
-    // Formateaza rasa
     $rasa = str_replace('-', ' ', ucwords($rasa_raw, '-'));
     
-    // Alege aleatoru din liste
     $personalitate = $adj_personalitate[array_rand($adj_personalitate)];
     $activitate = $adj_activitate[array_rand($adj_activitate)];
     $extra = $adj_extra[array_rand($adj_extra)];
     
-    // Combina descrierea
     $descriere = $personalitate . '. ' . $activitate . ' ' . $extra;
     
-    // Varsta aleatorie
     $varsta = rand(1, 10) . ' ani';
     
-    // Alege nume
     $index_nume = $contor % count($nume_lista);
     $nume = $nume_lista[$index_nume];
     
-    // Insereaza in baza de date
+
     try {
         $stmt->execute([$nume, $rasa, $varsta, $descriere, $img_url]);
         echo "✓ Adaugat: <strong>$nume</strong> ($rasa, $varsta)<br>";

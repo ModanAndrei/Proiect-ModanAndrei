@@ -2,7 +2,6 @@
 session_start();
 require 'db.php';
 
-// Daca se primeste parametru ?adopt=... redirectionam catre formularul de cerere
 if (isset($_GET['adopt'])) {
     if (!isset($_SESSION['user_id'])) {
         header('Location: login.php');
@@ -21,7 +20,6 @@ if (isset($_GET['adopt'])) {
     <title>Adopta - Labuta Fericita</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Filter form styles */
         .filter-wrap { max-width: 1100px; margin: 20px auto 30px; padding: 0 20px; width:100%; }
         .filter-form { display: flex; gap: 12px; align-items: center; background: #fff; padding: 12px; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); width:100%; max-width:900px; margin:0 auto; }
         .filter-input, .filter-select { padding: 10px 12px; border-radius: 6px; border: 1px solid #e1e1e1; font-size: 0.95rem; }
@@ -35,8 +33,7 @@ if (isset($_GET['adopt'])) {
             .filter-select, .filter-input { width: 100%; }
         }
 
-        /* Cards grid */
-        .cards-grid { max-width: 1100px; margin: 20px auto 40px; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; width:100%; box-sizing:border-box; }
+.cards-grid { max-width: 1100px; margin: 20px auto 40px; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; width:100%; box-sizing:border-box; }
         .card { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.08); display: flex; flex-direction: column; min-height: 340px; }
         .card img { width: 100%; height: 180px; object-fit: cover; display: block; }
         .card-body { padding: 16px; display:flex; flex-direction:column; gap:8px; }
@@ -45,11 +42,9 @@ if (isset($_GET['adopt'])) {
         .descriere { color:#666; font-size:0.95rem; margin:6px 0 12px; text-align:center; }
         .adopt-btn { background:#ff9800; color:white; border:none; padding:10px 14px; border-radius:6px; cursor:pointer; font-weight:700; align-self:center; }
 
-        /* Make hero spacing consistent */
         header { padding-bottom: 24px; }
 
-        /* Pagination styles */
-        .pagination { list-style:none; display:flex; gap:8px; justify-content:center; align-items:center; padding:0; margin:20px 0; }
+.pagination { list-style:none; display:flex; gap:8px; justify-content:center; align-items:center; padding:0; margin:20px 0; }
         .pagination li { display:inline-block; }
         .pagination a, .pagination span { display:inline-block; padding:8px 12px; border-radius:6px; text-decoration:none; color:#333; border:1px solid #eee; background:#fff; }
         .pagination a:hover { background:#f7f7f7; }
@@ -67,7 +62,6 @@ if (isset($_GET['adopt'])) {
 
     <div class="container">
         <?php
-        // Feedback pentru utilizator (succes / eroare de la request_adoption)
         if (isset($_GET['success'])) {
             echo '<p style="color:green; padding:10px; background:#eaffea; border:1px solid #b7f0b7;">Cererea a fost trimisă cu succes. Veți fi contactat pentru pașii următori.</p>';
         }
@@ -82,7 +76,6 @@ if (isset($_GET['adopt'])) {
             echo '<p style="color:#8a0000; padding:10px; background:#ffdede; border:1px solid #f0b0b0;">' . htmlspecialchars($msg) . '</p>';
         }
 
-        // Filtre si paginare
         $per_page = 8;
         $page = max(1, intval($_GET['page'] ?? 1));
         $offset = ($page - 1) * $per_page;
@@ -91,7 +84,6 @@ if (isset($_GET['adopt'])) {
         $filter_varsta = trim($_GET['varsta'] ?? '');
         $q = trim($_GET['q'] ?? '');
 
-        // Lista rase pentru dropdown
         $breedsStmt = $pdo->query("SELECT DISTINCT rasa FROM caini WHERE status = 'disponibil' AND rasa IS NOT NULL AND rasa != '' ORDER BY rasa");
         $breeds = $breedsStmt->fetchAll(PDO::FETCH_COLUMN);
 
@@ -103,29 +95,24 @@ if (isset($_GET['adopt'])) {
 
         $where_sql = implode(' AND ', $where);
 
-        // Total pentru paginare
         $countStmt = $pdo->prepare("SELECT COUNT(*) FROM caini WHERE $where_sql");
         $countStmt->execute($params);
         $total = (int)$countStmt->fetchColumn();
         $total_pages = max(1, ceil($total / $per_page));
 
-        // Interogare paginata (legate parametri, LIMIT/OFFSET sunt int)
         $sql = "SELECT * FROM caini WHERE $where_sql ORDER BY id DESC LIMIT ? OFFSET ?";
         $stmt = $pdo->prepare($sql);
-        // Bindam parametrii de filtrare (daca exista) ca string
         $paramIndex = 1;
         foreach ($params as $p) {
             $stmt->bindValue($paramIndex, $p, PDO::PARAM_STR);
             $paramIndex++;
         }
-        // Bindam LIMIT si OFFSET ca integer pentru a evita erori SQL cu ghilimele
         $stmt->bindValue($paramIndex, (int)$per_page, PDO::PARAM_INT);
         $paramIndex++;
         $stmt->bindValue($paramIndex, (int)$offset, PDO::PARAM_INT);
         $stmt->execute();
         $caini = $stmt->fetchAll();
 
-        // Form filtre (stilizat)
         echo '<div class="filter-wrap">';
         echo '<form method="GET" class="filter-form">';
         echo '<input type="text" name="q" placeholder="Caută nume..." value="' . htmlspecialchars($q) . '" class="filter-input">';
@@ -151,7 +138,6 @@ if (isset($_GET['adopt'])) {
                 echo '<div class="descriere">' . htmlspecialchars($caine['descriere']) . '</div>';
                 echo '<div style="margin-top:auto"><button class="adopt-btn" onclick="adoptCaine(' . $caine['id'] . ')">Adopta</button></div>';
 
-                // Admin controls
                 if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
                     echo '<div style="display:flex; gap:8px; justify-content:center; margin-top:8px;">';
                     echo '<a href="edit_dog.php?id=' . $caine['id'] . '" style="background:#4CAF50;color:white;padding:6px 8px;border-radius:6px;text-decoration:none;">Editează</a>';
@@ -168,15 +154,13 @@ if (isset($_GET['adopt'])) {
             }
             echo '</div>';
 
-            // Paginare numerică
-            $baseParams = [];
+            $baseParams = []; 
             if ($filter_rasa !== '') $baseParams['rasa'] = $filter_rasa;
             if ($filter_varsta !== '') $baseParams['varsta'] = $filter_varsta;
             if ($q !== '') $baseParams['q'] = $q;
 
             echo '<nav aria-label="Paginare" style="margin-top:18px;"><ul class="pagination">';
 
-            // Prev
             if ($page > 1) {
                 $baseParams['page'] = $page - 1;
                 echo '<li><a href="?' . http_build_query($baseParams) . '">◀ Prev</a></li>';
@@ -210,7 +194,6 @@ if (isset($_GET['adopt'])) {
                 echo '<li><a href="?' . http_build_query($baseParams) . '">' . $total_pages . '</a></li>';
             }
 
-            // Next
             if ($page < $total_pages) {
                 $baseParams['page'] = $page + 1;
                 echo '<li><a href="?' . http_build_query($baseParams) . '">Next ▶</a></li>';

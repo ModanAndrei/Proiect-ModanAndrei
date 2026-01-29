@@ -2,7 +2,6 @@
 session_start();
 require 'db.php';
 
-// Permisiuni - doar admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header('Location: index.php');
     exit;

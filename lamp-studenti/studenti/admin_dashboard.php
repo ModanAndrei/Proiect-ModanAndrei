@@ -2,7 +2,6 @@
 session_start();
 require 'db.php';
 
-// Permisiuni - doar admin
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header('Location: index.php');
     exit;
@@ -11,7 +10,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 $feedback = '';
 $error = '';
 
-// Procesare actiuni POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_POST['request_id']) || !is_numeric($_POST['request_id'])) {
         $error = 'ID cerere invalid.';
@@ -21,10 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try {
             if ($action === 'approve') {
-                // Start tranzactie
                 $pdo->beginTransaction();
 
-                // Verific cererea si starea cainelui
                 $stmt = $pdo->prepare("SELECT cereri.*, caini.status AS caine_status, caini.id AS caine_id FROM cereri JOIN caini ON cereri.caine_id = caini.id WHERE cereri.id = ? FOR UPDATE");
                 $stmt->execute([$request_id]);
                 $req = $stmt->fetch();
@@ -39,15 +35,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     throw new Exception('Cainele nu este disponibil.');
                 }
 
-                // Aprobare cerere
                 $stmt = $pdo->prepare("UPDATE cereri SET status = 'aprobat' WHERE id = ?");
                 $stmt->execute([$request_id]);
 
-                // Marcheaza caine ca adoptat
                 $stmt = $pdo->prepare("UPDATE caini SET status = 'adoptat' WHERE id = ?");
                 $stmt->execute([$req['caine_id']]);
 
-                // Respinge alte cereri in asteptare pentru acelasi caine
                 $stmt = $pdo->prepare("UPDATE cereri SET status = 'respins' WHERE caine_id = ? AND status = 'in_asteptare' AND id != ?");
                 $stmt->execute([$req['caine_id'], $request_id]);
 
@@ -55,9 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $feedback = 'Cererea a fost aprobată și câinele marcat ca adoptat.';
 
             } elseif ($action === 'reject') {
-                // Respinge cererea
                 $stmt = $pdo->prepare("SELECT * FROM cereri WHERE id = ?");
-                $stmt->execute([$request_id]);
+                $stmt->execute([$request_id]); 
                 $req = $stmt->fetch();
 
                 if (!$req) {
@@ -79,12 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Filtre / interogare cereri
 $statusFilter = $_GET['status'] ?? 'in_asteptare';
 $allowed = ['in_asteptare','aprobat','respins','all'];
 if (!in_array($statusFilter, $allowed)) $statusFilter = 'in_asteptare';
 
-// Detectam daca coloana `created_at` exista in tabela `cereri` si alegem ORDERE BY potrivit
 $colStmt = $pdo->prepare("SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'cereri' AND COLUMN_NAME = 'created_at'");
 $colStmt->execute();
 $hasCreated = $colStmt->fetchColumn() > 0;

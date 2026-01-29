@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
 } else {
-    // POST - update
     $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
     $applicant_name = trim($_POST['applicant_name'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
@@ -40,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
 
-    // ensure request belongs to user and is editable
     $stmt = $pdo->prepare("SELECT * FROM cereri WHERE id = ? AND user_id = ?");
     $stmt->execute([$id, $user_id]);
     $req = $stmt->fetch();
